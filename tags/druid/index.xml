@@ -1,0 +1,14 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>druid - 标签 - 琴弦上的尼古丁</title>
+        <link>http://example.org/tags/druid/</link>
+        <description>druid - 标签 - 琴弦上的尼古丁</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Fri, 07 Aug 2020 18:12:10 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/druid/" rel="self" type="application/rss+xml" /><item>
+    <title>解决druid连接池jquery的XSS漏洞</title>
+    <link>http://example.org/2020/08/%E8%A7%A3%E5%86%B3druid%E8%BF%9E%E6%8E%A5%E6%B1%A0jquery%E7%9A%84xss%E6%BC%8F%E6%B4%9E/</link>
+    <pubDate>Fri, 07 Aug 2020 18:12:10 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/2020/08/%E8%A7%A3%E5%86%B3druid%E8%BF%9E%E6%8E%A5%E6%B1%A0jquery%E7%9A%84xss%E6%BC%8F%E6%B4%9E/</guid>
+    <description><![CDATA[解决druid连接池jquery的XSS漏洞 解决过程 1.我们的项目经过渗透测试，发现目前druid中所用的jquery版本是v1.8.0，存]]></description>
+</item></channel>
+</rss>
