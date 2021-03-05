@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>一次莫名奇妙的线上服务500排查经历 - 琴弦上的尼古丁</title><meta name="Description" content="这是我的全新 Hugo 网站"><meta property="og:title" content="一次莫名奇妙的线上服务500排查经历" />
+<meta property="og:description" content="1. 背景： 注册中心：spring eureka 网关：spring gateway 问题服务模块：gbs-cms 部署模式：docker swarm集群，3个manage节点&#43;" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/2020/10/%E4%B8%80%E6%AC%A1%E8%8E%AB%E5%90%8D%E5%A5%87%E5%A6%99%E7%9A%84%E7%BA%BF%E4%B8%8A%E6%9C%8D%E5%8A%A1500%E6%8E%92%E6%9F%A5%E7%BB%8F%E5%8E%86/" />
+<meta property="og:image" content="http://example.org/favicon.ico"/>
+<meta property="article:published_time" content="2020-10-16T19:11:15+08:00" />
+<meta property="article:modified_time" content="2020-10-16T19:11:15+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/favicon.ico"/>
+
+<meta name="twitter:title" content="一次莫名奇妙的线上服务500排查经历"/>
+<meta name="twitter:description" content="1. 背景： 注册中心：spring eureka 网关：spring gateway 问题服务模块：gbs-cms 部署模式：docker swarm集群，3个manage节点&#43;"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt">
+<meta name="referrer" content="no-referrer" /><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/2020/10/%E4%B8%80%E6%AC%A1%E8%8E%AB%E5%90%8D%E5%A5%87%E5%A6%99%E7%9A%84%E7%BA%BF%E4%B8%8A%E6%9C%8D%E5%8A%A1500%E6%8E%92%E6%9F%A5%E7%BB%8F%E5%8E%86/" /><link rel="prev" href="http://example.org/2020/08/%E8%A7%A3%E5%86%B3druid%E8%BF%9E%E6%8E%A5%E6%B1%A0jquery%E7%9A%84xss%E6%BC%8F%E6%B4%9E/" /><link rel="next" href="http://example.org/2021/01/vm15%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%89%BE%E4%B8%8D%E5%88%B0ipv4%E5%9C%B0%E5%9D%80%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "一次莫名奇妙的线上服务500排查经历",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/2020\/10\/%E4%B8%80%E6%AC%A1%E8%8E%AB%E5%90%8D%E5%A5%87%E5%A6%99%E7%9A%84%E7%BA%BF%E4%B8%8A%E6%9C%8D%E5%8A%A1500%E6%8E%92%E6%9F%A5%E7%BB%8F%E5%8E%86\/"
+        },"genre": "posts","keywords": "线上故障","wordcount":  1377 ,
+        "url": "http:\/\/example.org\/2020\/10\/%E4%B8%80%E6%AC%A1%E8%8E%AB%E5%90%8D%E5%A5%87%E5%A6%99%E7%9A%84%E7%BA%BF%E4%B8%8A%E6%9C%8D%E5%8A%A1500%E6%8E%92%E6%9F%A5%E7%BB%8F%E5%8E%86\/","datePublished": "2020-10-16T19:11:15+08:00","dateModified": "2020-10-16T19:11:15+08:00","publisher": {
+            "@type": "Organization",
+            "name": "dlwxz"},"author": {
+                "@type": "Person",
+                "name": "琴弦上的尼古丁"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="琴弦上的尼古丁"></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="琴弦上的尼古丁"></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">一次莫名奇妙的线上服务500排查经历</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>琴弦上的尼古丁</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/troubleshoot-and-solve-online-problems/"><i class="far fa-folder fa-fw"></i>Troubleshoot and solve online problems</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-10-16">2020-10-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1377 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;<span id="/2020/10/%E4%B8%80%E6%AC%A1%E8%8E%AB%E5%90%8D%E5%A5%87%E5%A6%99%E7%9A%84%E7%BA%BF%E4%B8%8A%E6%9C%8D%E5%8A%A1500%E6%8E%92%E6%9F%A5%E7%BB%8F%E5%8E%86/" class="leancloud_visitors" data-flag-title="一次莫名奇妙的线上服务500排查经历">
+                        <i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#1-背景">1. 背景：</a></li>
+            <li><a href="#2-解决过程">2. 解决过程：</a>
+              <ul>
+                <li><a href="#21">2.1</a></li>
+                <li><a href="#22">2.2</a></li>
+                <li><a href="#23">2.3</a></li>
+                <li><a href="#24">2.4</a></li>
+                <li><a href="#25">2.5</a></li>
+              </ul>
+            </li>
+            <li><a href="#3-总结">3. 总结：</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h4 id="1-背景">1. 背景：</h4>
+<p>注册中心：spring eureka
+网关：spring gateway
+问题服务模块：gbs-cms
+部署模式：docker swarm集群，3个manage节点+3个worker节点
+问题描述：请求线上cms模块接口有时报错500有时正常，cms模块无报错日志，gateway模块报错cms拒绝连接
+报错信息：  </p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">Caused by: io.netty.channel.unix.Errors$NativeConnectException: syscall:getsockopt(..) failed:         Connection refused：gbs-cms/10.0.3.121
+</code></pre></td></tr></table>
+</div>
+</div><p>日志截图：
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602577986204-ab4e76ae-13c3-44cb-883f-e8ef706b4ab5.png#align=left&amp;display=inline&amp;height=173&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=345&amp;originWidth=1802&amp;size=84800&amp;status=done&amp;style=none&amp;width=901"
+        data-srcset="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602577986204-ab4e76ae-13c3-44cb-883f-e8ef706b4ab5.png#align=left&amp;display=inline&amp;height=173&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=345&amp;originWidth=1802&amp;size=84800&amp;status=done&amp;style=none&amp;width=901, https://cdn.nlark.com/yuque/0/2020/png/1318615/1602577986204-ab4e76ae-13c3-44cb-883f-e8ef706b4ab5.png#align=left&amp;display=inline&amp;height=173&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=345&amp;originWidth=1802&amp;size=84800&amp;status=done&amp;style=none&amp;width=901 1.5x, https://cdn.nlark.com/yuque/0/2020/png/1318615/1602577986204-ab4e76ae-13c3-44cb-883f-e8ef706b4ab5.png#align=left&amp;display=inline&amp;height=173&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=345&amp;originWidth=1802&amp;size=84800&amp;status=done&amp;style=none&amp;width=901 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602577986204-ab4e76ae-13c3-44cb-883f-e8ef706b4ab5.png#align=left&amp;display=inline&amp;height=173&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=345&amp;originWidth=1802&amp;size=84800&amp;status=done&amp;style=none&amp;width=901"
+        title="image.png" /></p>
+<h4 id="2-解决过程">2. 解决过程：</h4>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602578111481-d562314a-f654-4e0e-8859-cb62a8fe4d86.png#align=left&amp;display=inline&amp;height=105&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=210&amp;originWidth=1750&amp;size=28273&amp;status=done&amp;style=none&amp;width=875"
+        data-srcset="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602578111481-d562314a-f654-4e0e-8859-cb62a8fe4d86.png#align=left&amp;display=inline&amp;height=105&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=210&amp;originWidth=1750&amp;size=28273&amp;status=done&amp;style=none&amp;width=875, https://cdn.nlark.com/yuque/0/2020/png/1318615/1602578111481-d562314a-f654-4e0e-8859-cb62a8fe4d86.png#align=left&amp;display=inline&amp;height=105&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=210&amp;originWidth=1750&amp;size=28273&amp;status=done&amp;style=none&amp;width=875 1.5x, https://cdn.nlark.com/yuque/0/2020/png/1318615/1602578111481-d562314a-f654-4e0e-8859-cb62a8fe4d86.png#align=left&amp;display=inline&amp;height=105&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=210&amp;originWidth=1750&amp;size=28273&amp;status=done&amp;style=none&amp;width=875 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602578111481-d562314a-f654-4e0e-8859-cb62a8fe4d86.png#align=left&amp;display=inline&amp;height=105&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=210&amp;originWidth=1750&amp;size=28273&amp;status=done&amp;style=none&amp;width=875"
+        title="image.png" /></p>
+<h5 id="21">2.1</h5>
+<p>docker service ps检查cms服务，发现之前cms挂过: cms的service应该起2个task，实际上运行了3个，docker service ps查看实例状态有4个：一个shutdown,一个failure,挂了之后又起了两个success的，运行的这3个就是这一个failure和两个success的；于是重新发布了cms,这时候cms正常起来了两个success的实例，但是问题依然未解决,还是同样的报错:Connection refused：gbs-cms/10.0.3.121</p>
+<h5 id="22">2.2</h5>
+<p>于是怀疑是gateway或者eureka缓存的问题，重新发布了gateway和eureka,甚至对gateway进行扩容缩容，问题依然存在，报错还是同样存在，一点儿没变。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602577649387-518bc53a-58ea-4971-8f41-03fb274f5f2b.png#align=left&amp;display=inline&amp;height=60&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=119&amp;originWidth=922&amp;size=92583&amp;status=done&amp;style=none&amp;width=461"
+        data-srcset="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602577649387-518bc53a-58ea-4971-8f41-03fb274f5f2b.png#align=left&amp;display=inline&amp;height=60&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=119&amp;originWidth=922&amp;size=92583&amp;status=done&amp;style=none&amp;width=461, https://cdn.nlark.com/yuque/0/2020/png/1318615/1602577649387-518bc53a-58ea-4971-8f41-03fb274f5f2b.png#align=left&amp;display=inline&amp;height=60&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=119&amp;originWidth=922&amp;size=92583&amp;status=done&amp;style=none&amp;width=461 1.5x, https://cdn.nlark.com/yuque/0/2020/png/1318615/1602577649387-518bc53a-58ea-4971-8f41-03fb274f5f2b.png#align=left&amp;display=inline&amp;height=60&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=119&amp;originWidth=922&amp;size=92583&amp;status=done&amp;style=none&amp;width=461 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602577649387-518bc53a-58ea-4971-8f41-03fb274f5f2b.png#align=left&amp;display=inline&amp;height=60&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=119&amp;originWidth=922&amp;size=92583&amp;status=done&amp;style=none&amp;width=461"
+        title="image.png" /></p>
+<h5 id="23">2.3</h5>
+<p>这时注意到10.0.3.121这个ip上，我查看了6台服务器的所有的容器的虚拟ip根本找不到它，肯定是某个地方的缓存导致这个ip还存在，于是我又给每台服务器进行docker system prune,清理docker 无用的容器、镜像、网络等缓存，挨个重启docker,可是问题依然没有解决。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602813460798-c4f13079-cfc5-420d-a33a-6952e33e41a7.png#align=left&amp;display=inline&amp;height=60&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=120&amp;originWidth=728&amp;size=123766&amp;status=done&amp;style=none&amp;width=364"
+        data-srcset="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602813460798-c4f13079-cfc5-420d-a33a-6952e33e41a7.png#align=left&amp;display=inline&amp;height=60&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=120&amp;originWidth=728&amp;size=123766&amp;status=done&amp;style=none&amp;width=364, https://cdn.nlark.com/yuque/0/2020/png/1318615/1602813460798-c4f13079-cfc5-420d-a33a-6952e33e41a7.png#align=left&amp;display=inline&amp;height=60&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=120&amp;originWidth=728&amp;size=123766&amp;status=done&amp;style=none&amp;width=364 1.5x, https://cdn.nlark.com/yuque/0/2020/png/1318615/1602813460798-c4f13079-cfc5-420d-a33a-6952e33e41a7.png#align=left&amp;display=inline&amp;height=60&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=120&amp;originWidth=728&amp;size=123766&amp;status=done&amp;style=none&amp;width=364 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602813460798-c4f13079-cfc5-420d-a33a-6952e33e41a7.png#align=left&amp;display=inline&amp;height=60&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=120&amp;originWidth=728&amp;size=123766&amp;status=done&amp;style=none&amp;width=364"
+        title="image.png" /></p>
+<h5 id="24">2.4</h5>
+<p>接下来进入容器中去ping其他服务的名字，发现只有cms有两个ip,其他只有一个ip，查了一下资料，这个ip实际上是swarm service的一个虚拟ip,service之间通过这个ip来找到对应此service下的task容器实例；而且通过docker inspect 服务名，发现service的ip和task容器的ip是连号的，如：gbs-cms的ip是10.0.3.100，而它下面两个容器实例的ip是10.0.3.101和10.0.3.102，综上确定了10.0.3.121就是之前缓存下来的gbs-cms的ip，但是其下已无容器实例，新的gbs-cms是10.0.3.100，所以访问到121时就报错500，访问到100时就正常。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602813809933-775d2afb-071a-427b-9534-29fd396d579a.png#align=left&amp;display=inline&amp;height=184&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=367&amp;originWidth=641&amp;size=325242&amp;status=done&amp;style=none&amp;width=320.5"
+        data-srcset="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602813809933-775d2afb-071a-427b-9534-29fd396d579a.png#align=left&amp;display=inline&amp;height=184&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=367&amp;originWidth=641&amp;size=325242&amp;status=done&amp;style=none&amp;width=320.5, https://cdn.nlark.com/yuque/0/2020/png/1318615/1602813809933-775d2afb-071a-427b-9534-29fd396d579a.png#align=left&amp;display=inline&amp;height=184&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=367&amp;originWidth=641&amp;size=325242&amp;status=done&amp;style=none&amp;width=320.5 1.5x, https://cdn.nlark.com/yuque/0/2020/png/1318615/1602813809933-775d2afb-071a-427b-9534-29fd396d579a.png#align=left&amp;display=inline&amp;height=184&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=367&amp;originWidth=641&amp;size=325242&amp;status=done&amp;style=none&amp;width=320.5 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602813809933-775d2afb-071a-427b-9534-29fd396d579a.png#align=left&amp;display=inline&amp;height=184&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=367&amp;originWidth=641&amp;size=325242&amp;status=done&amp;style=none&amp;width=320.5"
+        title="image.png" />
+<img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602813729150-cbc1b9ef-6ec9-493e-8ef7-5cef67a83e2a.png#align=left&amp;display=inline&amp;height=129&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=257&amp;originWidth=618&amp;size=154365&amp;status=done&amp;style=none&amp;width=309"
+        data-srcset="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602813729150-cbc1b9ef-6ec9-493e-8ef7-5cef67a83e2a.png#align=left&amp;display=inline&amp;height=129&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=257&amp;originWidth=618&amp;size=154365&amp;status=done&amp;style=none&amp;width=309, https://cdn.nlark.com/yuque/0/2020/png/1318615/1602813729150-cbc1b9ef-6ec9-493e-8ef7-5cef67a83e2a.png#align=left&amp;display=inline&amp;height=129&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=257&amp;originWidth=618&amp;size=154365&amp;status=done&amp;style=none&amp;width=309 1.5x, https://cdn.nlark.com/yuque/0/2020/png/1318615/1602813729150-cbc1b9ef-6ec9-493e-8ef7-5cef67a83e2a.png#align=left&amp;display=inline&amp;height=129&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=257&amp;originWidth=618&amp;size=154365&amp;status=done&amp;style=none&amp;width=309 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602813729150-cbc1b9ef-6ec9-493e-8ef7-5cef67a83e2a.png#align=left&amp;display=inline&amp;height=129&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=257&amp;originWidth=618&amp;size=154365&amp;status=done&amp;style=none&amp;width=309"
+        title="image.png" /></p>
+<h5 id="25">2.5</h5>
+<p>目前推测就是之前那个failure的cms的task容器实例未清除彻底，进而导致原cms在docker内部的dns缓存未清除掉。于是想办法清除docker 内部的dns缓存，谷歌了全网也没找到什么好办法，无非就是发布时自己定义网络或者指定dns服务器，但是这么多服务我不可能因为这一个导致全部重发。于是我选择曲线救国，改了后端代码和部署脚本，给这个服务换一个hostname，重新发布，果然不报错了，新的服务名时gbs-cms-new,这样网关不会去找gbs-cms了，但是gbs-cms 的dns缓存却留在了docker中，目前我还没找到办法清除掉。</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602813748363-d414db12-7d48-43ba-8252-a27b5d6373d4.png#align=left&amp;display=inline&amp;height=222&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=443&amp;originWidth=901&amp;size=406911&amp;status=done&amp;style=none&amp;width=450.5"
+        data-srcset="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602813748363-d414db12-7d48-43ba-8252-a27b5d6373d4.png#align=left&amp;display=inline&amp;height=222&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=443&amp;originWidth=901&amp;size=406911&amp;status=done&amp;style=none&amp;width=450.5, https://cdn.nlark.com/yuque/0/2020/png/1318615/1602813748363-d414db12-7d48-43ba-8252-a27b5d6373d4.png#align=left&amp;display=inline&amp;height=222&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=443&amp;originWidth=901&amp;size=406911&amp;status=done&amp;style=none&amp;width=450.5 1.5x, https://cdn.nlark.com/yuque/0/2020/png/1318615/1602813748363-d414db12-7d48-43ba-8252-a27b5d6373d4.png#align=left&amp;display=inline&amp;height=222&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=443&amp;originWidth=901&amp;size=406911&amp;status=done&amp;style=none&amp;width=450.5 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2020/png/1318615/1602813748363-d414db12-7d48-43ba-8252-a27b5d6373d4.png#align=left&amp;display=inline&amp;height=222&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=443&amp;originWidth=901&amp;size=406911&amp;status=done&amp;style=none&amp;width=450.5"
+        title="image.png" /></p>
+<h4 id="3-总结">3. 总结：</h4>
+<p>疑惑(2020/10/16)：到底该如何清除docker容器内部的dns缓存呢，接下来要研究一下docker内部的dns server工作机制了。</p>
+<hr>
+<p>后续(2021/02/09)：执行docker system prune,将docker 系统的网络、悬空镜像、容器等彻底清理，再重启docker则缓存清除。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2020-10-16</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/2020/10/%E4%B8%80%E6%AC%A1%E8%8E%AB%E5%90%8D%E5%A5%87%E5%A6%99%E7%9A%84%E7%BA%BF%E4%B8%8A%E6%9C%8D%E5%8A%A1500%E6%8E%92%E6%9F%A5%E7%BB%8F%E5%8E%86/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/2020/10/%E4%B8%80%E6%AC%A1%E8%8E%AB%E5%90%8D%E5%A5%87%E5%A6%99%E7%9A%84%E7%BA%BF%E4%B8%8A%E6%9C%8D%E5%8A%A1500%E6%8E%92%E6%9F%A5%E7%BB%8F%E5%8E%86/" data-title="一次莫名奇妙的线上服务500排查经历" data-hashtags="线上故障"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/2020/10/%E4%B8%80%E6%AC%A1%E8%8E%AB%E5%90%8D%E5%A5%87%E5%A6%99%E7%9A%84%E7%BA%BF%E4%B8%8A%E6%9C%8D%E5%8A%A1500%E6%8E%92%E6%9F%A5%E7%BB%8F%E5%8E%86/" data-title="一次莫名奇妙的线上服务500排查经历"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/2020/10/%E4%B8%80%E6%AC%A1%E8%8E%AB%E5%90%8D%E5%A5%87%E5%A6%99%E7%9A%84%E7%BA%BF%E4%B8%8A%E6%9C%8D%E5%8A%A1500%E6%8E%92%E6%9F%A5%E7%BB%8F%E5%8E%86/" data-title="一次莫名奇妙的线上服务500排查经历"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/2020/10/%E4%B8%80%E6%AC%A1%E8%8E%AB%E5%90%8D%E5%A5%87%E5%A6%99%E7%9A%84%E7%BA%BF%E4%B8%8A%E6%9C%8D%E5%8A%A1500%E6%8E%92%E6%9F%A5%E7%BB%8F%E5%8E%86/" data-title="一次莫名奇妙的线上服务500排查经历" data-description=""><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 百度" data-sharer="baidu" data-url="http://example.org/2020/10/%E4%B8%80%E6%AC%A1%E8%8E%AB%E5%90%8D%E5%A5%87%E5%A6%99%E7%9A%84%E7%BA%BF%E4%B8%8A%E6%9C%8D%E5%8A%A1500%E6%8E%92%E6%9F%A5%E7%BB%8F%E5%8E%86/" data-title="一次莫名奇妙的线上服务500排查经历"><i data-svg-src="/lib/simple-icons/icons/baidu.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/2020/10/%E4%B8%80%E6%AC%A1%E8%8E%AB%E5%90%8D%E5%A5%87%E5%A6%99%E7%9A%84%E7%BA%BF%E4%B8%8A%E6%9C%8D%E5%8A%A1500%E6%8E%92%E6%9F%A5%E7%BB%8F%E5%8E%86/" data-title="一次莫名奇妙的线上服务500排查经历"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E7%BA%BF%E4%B8%8A%E6%95%85%E9%9A%9C/">线上故障</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/2020/08/%E8%A7%A3%E5%86%B3druid%E8%BF%9E%E6%8E%A5%E6%B1%A0jquery%E7%9A%84xss%E6%BC%8F%E6%B4%9E/" class="prev" rel="prev" title="解决druid连接池jquery的XSS漏洞"><i class="fas fa-angle-left fa-fw"></i>解决druid连接池jquery的XSS漏洞</a>
+            <a href="/2021/01/vm15%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%89%BE%E4%B8%8D%E5%88%B0ipv4%E5%9C%B0%E5%9D%80%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" class="next" rel="next" title="vm15虚拟机找不到ipv4地址问题解决">vm15虚拟机找不到ipv4地址问题解决<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">琴弦上的尼古丁</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span><span class="icp-splitter">&nbsp;|&nbsp;</span><br class="icp-br"/>
+                    <span class="icp"><a rel="license external nofollow noopener noreffer" href="http://www.beian.miit.gov.cn/" target="_blank">鲁ICP备20033165号</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><script type="text/javascript" src="/lib/valine/Valine.min.js"></script><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/algoliasearch/algoliasearch-lite.umd.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{"valine":{"appId":"MukJINFvSRk6eFNdtB8l46mi-MdYXbMMI","appKey":"jx4rQqdmxJg0uQrFfyf84E2h","avatar":"wavatar","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":true,"highlight":true,"lang":"zh-cn","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://MukJINFv.api.lncldglobal.com","visitor":true}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"9CO4DPODTH","algoliaIndex":"my_index","algoliaSearchKey":"376335344d993a70661d799292f97ffe","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

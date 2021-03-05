@@ -1,7 +1,5 @@
 # Hugo博客LoveIt主题valine评论系统配置
 
-# hugo博客valine评论系统配置（LoveIt主题）
-
 
 
 1、登录[leancloud](https://leancloud.cn/dashboard/login.html#/signin),选择“国际版”，若无账号先注册，可能需要手机号验证后才能创建应用![image.png](https://cdn.nlark.com/yuque/0/2020/png/1318615/1595916936670-194aee17-22c9-4aae-878b-e790e228c0d2.png#align=left&display=inline&height=434&margin=%5Bobject%20Object%5D&name=image.png&originHeight=867&originWidth=1920&size=95641&status=done&style=none&width=960)

@@ -1,0 +1,14 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>虚拟机 - 标签 - 琴弦上的尼古丁</title>
+        <link>http://example.org/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/</link>
+        <description>虚拟机 - 标签 - 琴弦上的尼古丁</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Fri, 08 Jan 2021 11:56:55 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/" rel="self" type="application/rss+xml" /><item>
+    <title>vm15虚拟机找不到ipv4地址问题解决</title>
+    <link>http://example.org/2021/01/vm15%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%89%BE%E4%B8%8D%E5%88%B0ipv4%E5%9C%B0%E5%9D%80%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/</link>
+    <pubDate>Fri, 08 Jan 2021 11:56:55 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/2021/01/vm15%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%89%BE%E4%B8%8D%E5%88%B0ipv4%E5%9C%B0%E5%9D%80%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/</guid>
+    <description><![CDATA[1. 打开编辑&gt;虚拟网络编辑器 2. 更改设置 3. 将网卡改为自己的真实wifi网卡，或者直接点击“还原默认设置” 总结： 产生这种问题的原因，推测可能]]></description>
+</item></channel>
+</rss>

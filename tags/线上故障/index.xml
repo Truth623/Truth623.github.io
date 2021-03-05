@@ -1,0 +1,21 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>线上故障 - 标签 - 琴弦上的尼古丁</title>
+        <link>http://example.org/tags/%E7%BA%BF%E4%B8%8A%E6%95%85%E9%9A%9C/</link>
+        <description>线上故障 - 标签 - 琴弦上的尼古丁</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 24 Feb 2021 11:26:59 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/%E7%BA%BF%E4%B8%8A%E6%95%85%E9%9A%9C/" rel="self" type="application/rss+xml" /><item>
+    <title>系统图片访问异常（HTTP_206响应）排查解决</title>
+    <link>http://example.org/2021/02/%E7%B3%BB%E7%BB%9F%E5%9B%BE%E7%89%87%E8%AE%BF%E9%97%AE%E5%BC%82%E5%B8%B8http_206%E5%93%8D%E5%BA%94%E6%8E%92%E6%9F%A5%E8%A7%A3%E5%86%B3/</link>
+    <pubDate>Wed, 24 Feb 2021 11:26:59 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/2021/02/%E7%B3%BB%E7%BB%9F%E5%9B%BE%E7%89%87%E8%AE%BF%E9%97%AE%E5%BC%82%E5%B8%B8http_206%E5%93%8D%E5%BA%94%E6%8E%92%E6%9F%A5%E8%A7%A3%E5%86%B3/</guid>
+    <description><![CDATA[问题描述 周一上午，客户群大量反馈：线上所有系统的图片出现有时无法访问、访问加载慢、有时需要多次加载才可以显示等问题。 问题排查 根据这种有时无法]]></description>
+</item><item>
+    <title>一次莫名奇妙的线上服务500排查经历</title>
+    <link>http://example.org/2020/10/%E4%B8%80%E6%AC%A1%E8%8E%AB%E5%90%8D%E5%A5%87%E5%A6%99%E7%9A%84%E7%BA%BF%E4%B8%8A%E6%9C%8D%E5%8A%A1500%E6%8E%92%E6%9F%A5%E7%BB%8F%E5%8E%86/</link>
+    <pubDate>Fri, 16 Oct 2020 19:11:15 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/2020/10/%E4%B8%80%E6%AC%A1%E8%8E%AB%E5%90%8D%E5%A5%87%E5%A6%99%E7%9A%84%E7%BA%BF%E4%B8%8A%E6%9C%8D%E5%8A%A1500%E6%8E%92%E6%9F%A5%E7%BB%8F%E5%8E%86/</guid>
+    <description><![CDATA[1. 背景： 注册中心：spring eureka 网关：spring gateway 问题服务模块：gbs-cms 部署模式：docker swarm集群，3个manage节点+]]></description>
+</item></channel>
+</rss>

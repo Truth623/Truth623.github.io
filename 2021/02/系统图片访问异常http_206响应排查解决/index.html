@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>系统图片访问异常（HTTP_206响应）排查解决 - 琴弦上的尼古丁</title><meta name="Description" content="这是我的全新 Hugo 网站"><meta property="og:title" content="系统图片访问异常（HTTP_206响应）排查解决" />
+<meta property="og:description" content="问题描述 周一上午，客户群大量反馈：线上所有系统的图片出现有时无法访问、访问加载慢、有时需要多次加载才可以显示等问题。 问题排查 根据这种有时无法" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/2021/02/%E7%B3%BB%E7%BB%9F%E5%9B%BE%E7%89%87%E8%AE%BF%E9%97%AE%E5%BC%82%E5%B8%B8http_206%E5%93%8D%E5%BA%94%E6%8E%92%E6%9F%A5%E8%A7%A3%E5%86%B3/" />
+<meta property="og:image" content="http://example.org/favicon.ico"/>
+<meta property="article:published_time" content="2021-02-24T11:26:59+08:00" />
+<meta property="article:modified_time" content="2021-02-24T11:26:59+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://example.org/favicon.ico"/>
+
+<meta name="twitter:title" content="系统图片访问异常（HTTP_206响应）排查解决"/>
+<meta name="twitter:description" content="问题描述 周一上午，客户群大量反馈：线上所有系统的图片出现有时无法访问、访问加载慢、有时需要多次加载才可以显示等问题。 问题排查 根据这种有时无法"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt">
+<meta name="referrer" content="no-referrer" /><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://example.org/2021/02/%E7%B3%BB%E7%BB%9F%E5%9B%BE%E7%89%87%E8%AE%BF%E9%97%AE%E5%BC%82%E5%B8%B8http_206%E5%93%8D%E5%BA%94%E6%8E%92%E6%9F%A5%E8%A7%A3%E5%86%B3/" /><link rel="prev" href="http://example.org/2021/01/vm15%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%89%BE%E4%B8%8D%E5%88%B0ipv4%E5%9C%B0%E5%9D%80%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "系统图片访问异常（HTTP_206响应）排查解决",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/example.org\/2021\/02\/%E7%B3%BB%E7%BB%9F%E5%9B%BE%E7%89%87%E8%AE%BF%E9%97%AE%E5%BC%82%E5%B8%B8http_206%E5%93%8D%E5%BA%94%E6%8E%92%E6%9F%A5%E8%A7%A3%E5%86%B3\/"
+        },"genre": "posts","keywords": "线上故障","wordcount":  994 ,
+        "url": "http:\/\/example.org\/2021\/02\/%E7%B3%BB%E7%BB%9F%E5%9B%BE%E7%89%87%E8%AE%BF%E9%97%AE%E5%BC%82%E5%B8%B8http_206%E5%93%8D%E5%BA%94%E6%8E%92%E6%9F%A5%E8%A7%A3%E5%86%B3\/","datePublished": "2021-02-24T11:26:59+08:00","dateModified": "2021-02-24T11:26:59+08:00","publisher": {
+            "@type": "Organization",
+            "name": "dlwxz"},"author": {
+                "@type": "Person",
+                "name": "琴弦上的尼古丁"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="琴弦上的尼古丁"></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="琴弦上的尼古丁"></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">系统图片访问异常（HTTP_206响应）排查解决</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>琴弦上的尼古丁</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/troubleshoot-and-solve-online-problems/"><i class="far fa-folder fa-fw"></i>Troubleshoot and solve online problems</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-02-24">2021-02-24</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 994 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;<span id="/2021/02/%E7%B3%BB%E7%BB%9F%E5%9B%BE%E7%89%87%E8%AE%BF%E9%97%AE%E5%BC%82%E5%B8%B8http_206%E5%93%8D%E5%BA%94%E6%8E%92%E6%9F%A5%E8%A7%A3%E5%86%B3/" class="leancloud_visitors" data-flag-title="系统图片访问异常（HTTP_206响应）排查解决">
+                        <i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#问题描述">问题描述</a></li>
+            <li><a href="#问题排查">问题排查</a></li>
+            <li><a href="#临时解决">临时解决</a></li>
+            <li><a href="#根本原因">根本原因</a></li>
+            <li><a href="#最终解决">最终解决</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p><a name="ZfOL6"></a></p>
+<h4 id="问题描述">问题描述</h4>
+<ul>
+<li>周一上午，客户群大量反馈：线上所有系统的图片出现有时无法访问、访问加载慢、有时需要多次加载才可以显示等问题。</li>
+</ul>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613971301324-dfc2a428-0d8c-49fb-b45a-17eab9339f55.png#align=left&amp;display=inline&amp;height=354&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=707&amp;originWidth=1069&amp;size=83467&amp;status=done&amp;style=none&amp;width=534.5"
+        data-srcset="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613971301324-dfc2a428-0d8c-49fb-b45a-17eab9339f55.png#align=left&amp;display=inline&amp;height=354&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=707&amp;originWidth=1069&amp;size=83467&amp;status=done&amp;style=none&amp;width=534.5, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613971301324-dfc2a428-0d8c-49fb-b45a-17eab9339f55.png#align=left&amp;display=inline&amp;height=354&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=707&amp;originWidth=1069&amp;size=83467&amp;status=done&amp;style=none&amp;width=534.5 1.5x, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613971301324-dfc2a428-0d8c-49fb-b45a-17eab9339f55.png#align=left&amp;display=inline&amp;height=354&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=707&amp;originWidth=1069&amp;size=83467&amp;status=done&amp;style=none&amp;width=534.5 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613971301324-dfc2a428-0d8c-49fb-b45a-17eab9339f55.png#align=left&amp;display=inline&amp;height=354&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=707&amp;originWidth=1069&amp;size=83467&amp;status=done&amp;style=none&amp;width=534.5"
+        title="image.png" />
+<a name="AHdjf"></a></p>
+<h4 id="问题排查">问题排查</h4>
+<ul>
+<li>根据这种有时无法访问的问题，首先推测是不是有的节点挂了，经排查，发现前后端docker服务集群中的所有服务节点均正常。</li>
+<li>推断在应用程序服务正常，只是图片异常的情况，很有可能是nginx（通用入口服务器）或者fastdfs(文件服务器)的问题；经过多次刷新后，终于登录上后台管理系统，测试文件上传功能，成功；然后访问上传成功的图片，发现只加载了一半，而另一个同事测试移动端系统的图片http响应码为206（客户端通过发送范围请求头Range抓取到了资源的部分数据），而图片又不大，于是可以大致推断fastdfs正常，很有可能是nginx异常引起的。</li>
+<li>登录nginx服务器（通用入口），执行top命令，发现nginx cpu占用20%左右，正常情况下都是占用0.几%，不至于这么多；执行free -mh命令，发现mem的free只剩下一百多mb,而used也只用的几百mb,反而buffer/cache很高。</li>
+</ul>
+<p>    <img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973292811-ca1325eb-c4a0-433c-9b1b-c081b430ec15.png#align=left&amp;display=inline&amp;height=213&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=426&amp;originWidth=1089&amp;size=59595&amp;status=done&amp;style=none&amp;width=544.5"
+        data-srcset="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973292811-ca1325eb-c4a0-433c-9b1b-c081b430ec15.png#align=left&amp;display=inline&amp;height=213&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=426&amp;originWidth=1089&amp;size=59595&amp;status=done&amp;style=none&amp;width=544.5, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973292811-ca1325eb-c4a0-433c-9b1b-c081b430ec15.png#align=left&amp;display=inline&amp;height=213&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=426&amp;originWidth=1089&amp;size=59595&amp;status=done&amp;style=none&amp;width=544.5 1.5x, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973292811-ca1325eb-c4a0-433c-9b1b-c081b430ec15.png#align=left&amp;display=inline&amp;height=213&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=426&amp;originWidth=1089&amp;size=59595&amp;status=done&amp;style=none&amp;width=544.5 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973292811-ca1325eb-c4a0-433c-9b1b-c081b430ec15.png#align=left&amp;display=inline&amp;height=213&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=426&amp;originWidth=1089&amp;size=59595&amp;status=done&amp;style=none&amp;width=544.5"
+        title="image.png" /></p>
+<ul>
+<li>执行df -h命令，未响应；执行df /命令，发现系统盘空间100%。综上所述，系统盘空间不够导致nginx无法正常存储运行日志，缓冲区占用较高说明磁盘空间不足开始向物理内存借用空间，系统盘需要扩充以快速解决问题。</li>
+</ul>
+<p>    <img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613972719997-15c90408-eb86-4b9b-8846-df28a85095bd.png#align=left&amp;display=inline&amp;height=34&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=67&amp;originWidth=715&amp;size=13410&amp;status=done&amp;style=none&amp;width=357.5"
+        data-srcset="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613972719997-15c90408-eb86-4b9b-8846-df28a85095bd.png#align=left&amp;display=inline&amp;height=34&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=67&amp;originWidth=715&amp;size=13410&amp;status=done&amp;style=none&amp;width=357.5, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613972719997-15c90408-eb86-4b9b-8846-df28a85095bd.png#align=left&amp;display=inline&amp;height=34&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=67&amp;originWidth=715&amp;size=13410&amp;status=done&amp;style=none&amp;width=357.5 1.5x, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613972719997-15c90408-eb86-4b9b-8846-df28a85095bd.png#align=left&amp;display=inline&amp;height=34&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=67&amp;originWidth=715&amp;size=13410&amp;status=done&amp;style=none&amp;width=357.5 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613972719997-15c90408-eb86-4b9b-8846-df28a85095bd.png#align=left&amp;display=inline&amp;height=34&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=67&amp;originWidth=715&amp;size=13410&amp;status=done&amp;style=none&amp;width=357.5"
+        title="image.png" /><br />    <img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973655981-5a5e92b0-0847-4e52-93c5-b6edea46e7bb.png#align=left&amp;display=inline&amp;height=140&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=280&amp;originWidth=808&amp;size=34330&amp;status=done&amp;style=none&amp;width=404"
+        data-srcset="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973655981-5a5e92b0-0847-4e52-93c5-b6edea46e7bb.png#align=left&amp;display=inline&amp;height=140&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=280&amp;originWidth=808&amp;size=34330&amp;status=done&amp;style=none&amp;width=404, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973655981-5a5e92b0-0847-4e52-93c5-b6edea46e7bb.png#align=left&amp;display=inline&amp;height=140&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=280&amp;originWidth=808&amp;size=34330&amp;status=done&amp;style=none&amp;width=404 1.5x, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973655981-5a5e92b0-0847-4e52-93c5-b6edea46e7bb.png#align=left&amp;display=inline&amp;height=140&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=280&amp;originWidth=808&amp;size=34330&amp;status=done&amp;style=none&amp;width=404 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973655981-5a5e92b0-0847-4e52-93c5-b6edea46e7bb.png#align=left&amp;display=inline&amp;height=140&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=280&amp;originWidth=808&amp;size=34330&amp;status=done&amp;style=none&amp;width=404"
+        title="image.png" />
+<a name="WMtFX"></a></p>
+<h4 id="临时解决">临时解决</h4>
+<ul>
+<li>经过各方资源的积极配合和快速处理，系统盘成功又增加了50G可用空间，重启nginx后，线上图片访问恢复正常。</li>
+</ul>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973699702-e76ce731-e44d-432e-9cc7-b0935efdd0ea.png#align=left&amp;display=inline&amp;height=122&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=244&amp;originWidth=769&amp;size=31014&amp;status=done&amp;style=none&amp;width=384.5"
+        data-srcset="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973699702-e76ce731-e44d-432e-9cc7-b0935efdd0ea.png#align=left&amp;display=inline&amp;height=122&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=244&amp;originWidth=769&amp;size=31014&amp;status=done&amp;style=none&amp;width=384.5, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973699702-e76ce731-e44d-432e-9cc7-b0935efdd0ea.png#align=left&amp;display=inline&amp;height=122&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=244&amp;originWidth=769&amp;size=31014&amp;status=done&amp;style=none&amp;width=384.5 1.5x, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973699702-e76ce731-e44d-432e-9cc7-b0935efdd0ea.png#align=left&amp;display=inline&amp;height=122&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=244&amp;originWidth=769&amp;size=31014&amp;status=done&amp;style=none&amp;width=384.5 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973699702-e76ce731-e44d-432e-9cc7-b0935efdd0ea.png#align=left&amp;display=inline&amp;height=122&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=244&amp;originWidth=769&amp;size=31014&amp;status=done&amp;style=none&amp;width=384.5"
+        title="image.png" />
+<a name="zjdeT"></a></p>
+<h4 id="根本原因">根本原因</h4>
+<ul>
+<li>临时解决后，准备找出哪个目录占用了大量空间，输入du -sh /*,查看根目录下各目录使用空间，发现/app目录占用了32G。</li>
+</ul>
+<p>    <img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613974696389-ae025a66-2c91-408c-9eda-030f0889ff0a.png#align=left&amp;display=inline&amp;height=290&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=580&amp;originWidth=926&amp;size=61614&amp;status=done&amp;style=none&amp;width=463"
+        data-srcset="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613974696389-ae025a66-2c91-408c-9eda-030f0889ff0a.png#align=left&amp;display=inline&amp;height=290&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=580&amp;originWidth=926&amp;size=61614&amp;status=done&amp;style=none&amp;width=463, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613974696389-ae025a66-2c91-408c-9eda-030f0889ff0a.png#align=left&amp;display=inline&amp;height=290&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=580&amp;originWidth=926&amp;size=61614&amp;status=done&amp;style=none&amp;width=463 1.5x, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613974696389-ae025a66-2c91-408c-9eda-030f0889ff0a.png#align=left&amp;display=inline&amp;height=290&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=580&amp;originWidth=926&amp;size=61614&amp;status=done&amp;style=none&amp;width=463 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613974696389-ae025a66-2c91-408c-9eda-030f0889ff0a.png#align=left&amp;display=inline&amp;height=290&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=580&amp;originWidth=926&amp;size=61614&amp;status=done&amp;style=none&amp;width=463"
+        title="image.png" /></p>
+<ul>
+<li>经排查，/app目录是很多nginx子配置的access_log目录，而/app目录竟然不是挂载到/data数据盘上的，而是挂在了系统盘上；这样，不断产生的日志文件导致了系统盘占满。</li>
+</ul>
+<p>    <img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973699702-e76ce731-e44d-432e-9cc7-b0935efdd0ea.png#align=left&amp;display=inline&amp;height=122&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=244&amp;originWidth=769&amp;size=31014&amp;status=done&amp;style=none&amp;width=384.5"
+        data-srcset="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973699702-e76ce731-e44d-432e-9cc7-b0935efdd0ea.png#align=left&amp;display=inline&amp;height=122&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=244&amp;originWidth=769&amp;size=31014&amp;status=done&amp;style=none&amp;width=384.5, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973699702-e76ce731-e44d-432e-9cc7-b0935efdd0ea.png#align=left&amp;display=inline&amp;height=122&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=244&amp;originWidth=769&amp;size=31014&amp;status=done&amp;style=none&amp;width=384.5 1.5x, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973699702-e76ce731-e44d-432e-9cc7-b0935efdd0ea.png#align=left&amp;display=inline&amp;height=122&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=244&amp;originWidth=769&amp;size=31014&amp;status=done&amp;style=none&amp;width=384.5 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973699702-e76ce731-e44d-432e-9cc7-b0935efdd0ea.png#align=left&amp;display=inline&amp;height=122&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=244&amp;originWidth=769&amp;size=31014&amp;status=done&amp;style=none&amp;width=384.5"
+        title="image.png" />
+<a name="T9hgt"></a></p>
+<h4 id="最终解决">最终解决</h4>
+<ul>
+<li>把/app移动到空间足够的数据盘目录/data。</li>
+</ul>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973077878-3b780c20-c8b9-41c5-ad85-3110e4030064.png#align=left&amp;display=inline&amp;height=42&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=84&amp;originWidth=673&amp;size=9298&amp;status=done&amp;style=none&amp;width=336.5"
+        data-srcset="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973077878-3b780c20-c8b9-41c5-ad85-3110e4030064.png#align=left&amp;display=inline&amp;height=42&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=84&amp;originWidth=673&amp;size=9298&amp;status=done&amp;style=none&amp;width=336.5, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973077878-3b780c20-c8b9-41c5-ad85-3110e4030064.png#align=left&amp;display=inline&amp;height=42&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=84&amp;originWidth=673&amp;size=9298&amp;status=done&amp;style=none&amp;width=336.5 1.5x, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973077878-3b780c20-c8b9-41c5-ad85-3110e4030064.png#align=left&amp;display=inline&amp;height=42&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=84&amp;originWidth=673&amp;size=9298&amp;status=done&amp;style=none&amp;width=336.5 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973077878-3b780c20-c8b9-41c5-ad85-3110e4030064.png#align=left&amp;display=inline&amp;height=42&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=84&amp;originWidth=673&amp;size=9298&amp;status=done&amp;style=none&amp;width=336.5"
+        title="image.png" /></p>
+<ul>
+<li>df -h 查看空间并未释放，输入lsof | grep app，nginx进程之前打开了这些文件，还在向/app写日志，并未真正从磁盘删除。</li>
+</ul>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613976463700-e9340223-cfe9-4523-9dcc-cfaa52403813.png#align=left&amp;display=inline&amp;height=520&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=1040&amp;originWidth=1920&amp;size=368343&amp;status=done&amp;style=none&amp;width=960"
+        data-srcset="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613976463700-e9340223-cfe9-4523-9dcc-cfaa52403813.png#align=left&amp;display=inline&amp;height=520&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=1040&amp;originWidth=1920&amp;size=368343&amp;status=done&amp;style=none&amp;width=960, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613976463700-e9340223-cfe9-4523-9dcc-cfaa52403813.png#align=left&amp;display=inline&amp;height=520&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=1040&amp;originWidth=1920&amp;size=368343&amp;status=done&amp;style=none&amp;width=960 1.5x, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613976463700-e9340223-cfe9-4523-9dcc-cfaa52403813.png#align=left&amp;display=inline&amp;height=520&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=1040&amp;originWidth=1920&amp;size=368343&amp;status=done&amp;style=none&amp;width=960 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613976463700-e9340223-cfe9-4523-9dcc-cfaa52403813.png#align=left&amp;display=inline&amp;height=520&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=1040&amp;originWidth=1920&amp;size=368343&amp;status=done&amp;style=none&amp;width=960"
+        title="image.png" /></p>
+<ul>
+<li>修改nginx配置文件，查看nginx域名配置，把所有日志写入文件路径为/app开头的，替换成/data/app。</li>
+</ul>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613977029853-351dee9d-6b69-4b57-b16a-209fa3a7d2a8.png#align=left&amp;display=inline&amp;height=83&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=166&amp;originWidth=777&amp;size=13731&amp;status=done&amp;style=none&amp;width=388.5"
+        data-srcset="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613977029853-351dee9d-6b69-4b57-b16a-209fa3a7d2a8.png#align=left&amp;display=inline&amp;height=83&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=166&amp;originWidth=777&amp;size=13731&amp;status=done&amp;style=none&amp;width=388.5, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613977029853-351dee9d-6b69-4b57-b16a-209fa3a7d2a8.png#align=left&amp;display=inline&amp;height=83&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=166&amp;originWidth=777&amp;size=13731&amp;status=done&amp;style=none&amp;width=388.5 1.5x, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613977029853-351dee9d-6b69-4b57-b16a-209fa3a7d2a8.png#align=left&amp;display=inline&amp;height=83&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=166&amp;originWidth=777&amp;size=13731&amp;status=done&amp;style=none&amp;width=388.5 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613977029853-351dee9d-6b69-4b57-b16a-209fa3a7d2a8.png#align=left&amp;display=inline&amp;height=83&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=166&amp;originWidth=777&amp;size=13731&amp;status=done&amp;style=none&amp;width=388.5"
+        title="image.png" /></p>
+<ul>
+<li>新的日志写入已经生效，老的还被nginx死进程占用着，需要删除nginx死进程。</li>
+</ul>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613978537985-d44a0adf-9ecc-426e-9960-ff491533afca.png#align=left&amp;display=inline&amp;height=449&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=898&amp;originWidth=1676&amp;size=293035&amp;status=done&amp;style=none&amp;width=838"
+        data-srcset="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613978537985-d44a0adf-9ecc-426e-9960-ff491533afca.png#align=left&amp;display=inline&amp;height=449&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=898&amp;originWidth=1676&amp;size=293035&amp;status=done&amp;style=none&amp;width=838, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613978537985-d44a0adf-9ecc-426e-9960-ff491533afca.png#align=left&amp;display=inline&amp;height=449&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=898&amp;originWidth=1676&amp;size=293035&amp;status=done&amp;style=none&amp;width=838 1.5x, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613978537985-d44a0adf-9ecc-426e-9960-ff491533afca.png#align=left&amp;display=inline&amp;height=449&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=898&amp;originWidth=1676&amp;size=293035&amp;status=done&amp;style=none&amp;width=838 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613978537985-d44a0adf-9ecc-426e-9960-ff491533afca.png#align=left&amp;display=inline&amp;height=449&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=898&amp;originWidth=1676&amp;size=293035&amp;status=done&amp;style=none&amp;width=838"
+        title="image.png" /><br /><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613978419439-2256cae9-57c2-4b6b-ac72-af4161e1806d.png#align=left&amp;display=inline&amp;height=52&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=103&amp;originWidth=1015&amp;size=10726&amp;status=done&amp;style=none&amp;width=507.5"
+        data-srcset="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613978419439-2256cae9-57c2-4b6b-ac72-af4161e1806d.png#align=left&amp;display=inline&amp;height=52&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=103&amp;originWidth=1015&amp;size=10726&amp;status=done&amp;style=none&amp;width=507.5, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613978419439-2256cae9-57c2-4b6b-ac72-af4161e1806d.png#align=left&amp;display=inline&amp;height=52&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=103&amp;originWidth=1015&amp;size=10726&amp;status=done&amp;style=none&amp;width=507.5 1.5x, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613978419439-2256cae9-57c2-4b6b-ac72-af4161e1806d.png#align=left&amp;display=inline&amp;height=52&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=103&amp;originWidth=1015&amp;size=10726&amp;status=done&amp;style=none&amp;width=507.5 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613978419439-2256cae9-57c2-4b6b-ac72-af4161e1806d.png#align=left&amp;display=inline&amp;height=52&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=103&amp;originWidth=1015&amp;size=10726&amp;status=done&amp;style=none&amp;width=507.5"
+        title="image.png" /></p>
+<ul>
+<li>删除死进程后查看磁盘挂载空间，/app占用的32G空间已释放。</li>
+</ul>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973699702-e76ce731-e44d-432e-9cc7-b0935efdd0ea.png#align=left&amp;display=inline&amp;height=122&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=244&amp;originWidth=769&amp;size=31014&amp;status=done&amp;style=none&amp;width=384.5"
+        data-srcset="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973699702-e76ce731-e44d-432e-9cc7-b0935efdd0ea.png#align=left&amp;display=inline&amp;height=122&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=244&amp;originWidth=769&amp;size=31014&amp;status=done&amp;style=none&amp;width=384.5, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973699702-e76ce731-e44d-432e-9cc7-b0935efdd0ea.png#align=left&amp;display=inline&amp;height=122&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=244&amp;originWidth=769&amp;size=31014&amp;status=done&amp;style=none&amp;width=384.5 1.5x, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973699702-e76ce731-e44d-432e-9cc7-b0935efdd0ea.png#align=left&amp;display=inline&amp;height=122&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=244&amp;originWidth=769&amp;size=31014&amp;status=done&amp;style=none&amp;width=384.5 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613973699702-e76ce731-e44d-432e-9cc7-b0935efdd0ea.png#align=left&amp;display=inline&amp;height=122&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=244&amp;originWidth=769&amp;size=31014&amp;status=done&amp;style=none&amp;width=384.5"
+        title="image.png" /><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613978711492-a39a6e95-3c6d-43ff-8248-8a35ff934741.png#align=left&amp;display=inline&amp;height=124&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=247&amp;originWidth=756&amp;size=31632&amp;status=done&amp;style=none&amp;width=378"
+        data-srcset="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613978711492-a39a6e95-3c6d-43ff-8248-8a35ff934741.png#align=left&amp;display=inline&amp;height=124&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=247&amp;originWidth=756&amp;size=31632&amp;status=done&amp;style=none&amp;width=378, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613978711492-a39a6e95-3c6d-43ff-8248-8a35ff934741.png#align=left&amp;display=inline&amp;height=124&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=247&amp;originWidth=756&amp;size=31632&amp;status=done&amp;style=none&amp;width=378 1.5x, https://cdn.nlark.com/yuque/0/2021/png/1318615/1613978711492-a39a6e95-3c6d-43ff-8248-8a35ff934741.png#align=left&amp;display=inline&amp;height=124&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=247&amp;originWidth=756&amp;size=31632&amp;status=done&amp;style=none&amp;width=378 2x"
+        data-sizes="auto"
+        alt="https://cdn.nlark.com/yuque/0/2021/png/1318615/1613978711492-a39a6e95-3c6d-43ff-8248-8a35ff934741.png#align=left&amp;display=inline&amp;height=124&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=247&amp;originWidth=756&amp;size=31632&amp;status=done&amp;style=none&amp;width=378"
+        title="image.png" /></p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-02-24</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/2021/02/%E7%B3%BB%E7%BB%9F%E5%9B%BE%E7%89%87%E8%AE%BF%E9%97%AE%E5%BC%82%E5%B8%B8http_206%E5%93%8D%E5%BA%94%E6%8E%92%E6%9F%A5%E8%A7%A3%E5%86%B3/index.md" target="_blank">阅读原始文档</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="http://example.org/2021/02/%E7%B3%BB%E7%BB%9F%E5%9B%BE%E7%89%87%E8%AE%BF%E9%97%AE%E5%BC%82%E5%B8%B8http_206%E5%93%8D%E5%BA%94%E6%8E%92%E6%9F%A5%E8%A7%A3%E5%86%B3/" data-title="系统图片访问异常（HTTP_206响应）排查解决" data-hashtags="线上故障"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="http://example.org/2021/02/%E7%B3%BB%E7%BB%9F%E5%9B%BE%E7%89%87%E8%AE%BF%E9%97%AE%E5%BC%82%E5%B8%B8http_206%E5%93%8D%E5%BA%94%E6%8E%92%E6%9F%A5%E8%A7%A3%E5%86%B3/" data-title="系统图片访问异常（HTTP_206响应）排查解决"><i data-svg-src="/lib/simple-icons/icons/line.min.svg"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="http://example.org/2021/02/%E7%B3%BB%E7%BB%9F%E5%9B%BE%E7%89%87%E8%AE%BF%E9%97%AE%E5%BC%82%E5%B8%B8http_206%E5%93%8D%E5%BA%94%E6%8E%92%E6%9F%A5%E8%A7%A3%E5%86%B3/" data-title="系统图片访问异常（HTTP_206响应）排查解决"><i class="fab fa-weibo fa-fw"></i></a><a href="javascript:void(0);" title="分享到 Blogger" data-sharer="blogger" data-url="http://example.org/2021/02/%E7%B3%BB%E7%BB%9F%E5%9B%BE%E7%89%87%E8%AE%BF%E9%97%AE%E5%BC%82%E5%B8%B8http_206%E5%93%8D%E5%BA%94%E6%8E%92%E6%9F%A5%E8%A7%A3%E5%86%B3/" data-title="系统图片访问异常（HTTP_206响应）排查解决" data-description=""><i class="fab fa-blogger fa-fw"></i></a><a href="javascript:void(0);" title="分享到 百度" data-sharer="baidu" data-url="http://example.org/2021/02/%E7%B3%BB%E7%BB%9F%E5%9B%BE%E7%89%87%E8%AE%BF%E9%97%AE%E5%BC%82%E5%B8%B8http_206%E5%93%8D%E5%BA%94%E6%8E%92%E6%9F%A5%E8%A7%A3%E5%86%B3/" data-title="系统图片访问异常（HTTP_206响应）排查解决"><i data-svg-src="/lib/simple-icons/icons/baidu.min.svg"></i></a><a href="javascript:void(0);" title="分享到 Evernote" data-sharer="evernote" data-url="http://example.org/2021/02/%E7%B3%BB%E7%BB%9F%E5%9B%BE%E7%89%87%E8%AE%BF%E9%97%AE%E5%BC%82%E5%B8%B8http_206%E5%93%8D%E5%BA%94%E6%8E%92%E6%9F%A5%E8%A7%A3%E5%86%B3/" data-title="系统图片访问异常（HTTP_206响应）排查解决"><i class="fab fa-evernote fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E7%BA%BF%E4%B8%8A%E6%95%85%E9%9A%9C/">线上故障</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/2021/01/vm15%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%89%BE%E4%B8%8D%E5%88%B0ipv4%E5%9C%B0%E5%9D%80%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" class="prev" rel="prev" title="vm15虚拟机找不到ipv4地址问题解决"><i class="fas fa-angle-left fa-fw"></i>vm15虚拟机找不到ipv4地址问题解决</a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">琴弦上的尼古丁</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span><span class="icp-splitter">&nbsp;|&nbsp;</span><br class="icp-br"/>
+                    <span class="icp"><a rel="license external nofollow noopener noreffer" href="http://www.beian.miit.gov.cn/" target="_blank">鲁ICP备20033165号</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><script type="text/javascript" src="/lib/valine/Valine.min.js"></script><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/algoliasearch/algoliasearch-lite.umd.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":10},"comment":{"valine":{"appId":"MukJINFvSRk6eFNdtB8l46mi-MdYXbMMI","appKey":"jx4rQqdmxJg0uQrFfyf84E2h","avatar":"wavatar","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":true,"highlight":true,"lang":"zh-cn","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://MukJINFv.api.lncldglobal.com","visitor":true}},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"algoliaAppID":"9CO4DPODTH","algoliaIndex":"my_index","algoliaSearchKey":"376335344d993a70661d799292f97ffe","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

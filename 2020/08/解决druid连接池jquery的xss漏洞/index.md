@@ -1,8 +1,6 @@
 # 解决druid连接池jquery的XSS漏洞
 
 
-# 解决druid连接池jquery的XSS漏洞
-
 ## 解决过程
 1.我们的项目经过渗透测试，发现目前druid中所用的jquery版本是v1.8.0，存在xss漏洞，网上查找了一下资料，部分资料说低于1.10.2存在xss漏洞。
 
